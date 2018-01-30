@@ -13,6 +13,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -21,6 +24,9 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NewItemFragment.OnNewItemAddedListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private final int MENU_IS_DONE = 0;
+    private final int MENU_DELETE = 2;
 
     private ArrayList<ToDoItem> todoItems;
     private ToDoItemAdapter aa;
@@ -37,46 +43,87 @@ public class MainActivity extends AppCompatActivity
         ToDoListFragment toDoListFragment = (ToDoListFragment)fm.findFragmentById(R.id.ToDoListFragment);
         toDoListFragment.setListAdapter(aa);
 
-        toDoListFragment.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                final ToDoItem item = (ToDoItem)parent.getItemAtPosition(position);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("ToDo")
-                        .setMessage("Задание \"" + item.getTask() + "\" выполено?")
-                        .setCancelable(false)
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Uri uri = ContentUris.withAppendedId(ToDoContentProvider.CONTENT_URI, item.getId());
-                                ContentValues values = new ContentValues();
-                                values.put(ToDoContentProvider.KEY_IS_DONE, 1);
-                                ContentResolver cr = getContentResolver();
-                                cr.update(uri, values, null, null);
-                                getLoaderManager().restartLoader(0, null, MainActivity.this);
-                            }
-                        })
-                        .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                return true;
-            }
-        });
-
         getLoaderManager().initLoader(0, null, this);
+        registerForContextMenu(toDoListFragment.getListView());
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+
+        menu.setHeaderTitle("Выбор действия");
+        menu.add(Menu.NONE, MENU_IS_DONE, Menu.NONE, "Выполнить");
+        menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, "Удалить");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem menuItem) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuItem.getMenuInfo();
+        ToDoItem item = aa.getItem(info.position);
+
+        switch (menuItem.getItemId())
+        {
+            case MENU_IS_DONE:
+                setToDoItemIsDone(item);
+                return true;
+            case MENU_DELETE:
+                deleteToDoItem(item);
+                return true;
+        }
+
+        return false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(0, null, this);
+    }
+
+    private void setToDoItemIsDone(final ToDoItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("ToDo")
+                .setMessage("Задание \"" + item.getTask() + "\" выполено?")
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = ContentUris.withAppendedId(ToDoContentProvider.CONTENT_URI, item.getId());
+                        ContentValues values = new ContentValues();
+                        values.put(ToDoContentProvider.KEY_IS_DONE, 1);
+                        ContentResolver cr = getContentResolver();
+                        cr.update(uri, values, null, null);
+                        getLoaderManager().restartLoader(0, null, MainActivity.this);
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void deleteToDoItem(final ToDoItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("ToDo")
+                .setMessage("Задание \"" + item.getTask() + "\" удалить?")
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = ContentUris.withAppendedId(ToDoContentProvider.CONTENT_URI, item.getId());
+                        ContentResolver cr = getContentResolver();
+                        cr.delete(uri, null, null);
+                        getLoaderManager().restartLoader(0, null, MainActivity.this);
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     // region NewItemFragment.OnNewItemAddedListener
