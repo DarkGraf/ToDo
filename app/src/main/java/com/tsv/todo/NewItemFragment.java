@@ -12,7 +12,7 @@ import android.widget.EditText;
 public class NewItemFragment extends Fragment {
 
     public interface OnNewItemAddedListener {
-        void onNewItemAdded(String newItem);
+        void onNewItemAdded(ToDoItem newItem);
     }
 
     private OnNewItemAddedListener onNewItemAddedListener;
@@ -25,9 +25,11 @@ public class NewItemFragment extends Fragment {
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // Не будем пропускать пустые задачи.
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-                        String newItem = editText.getText().toString();
+                    String newTask = editText.getText().toString();
+                    if ((keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) && !newTask.isEmpty()) {
+                        ToDoItem newItem = new ToDoItem(newTask);
                         onNewItemAddedListener.onNewItemAdded(newItem);
                         editText.setText("");
                         return true;

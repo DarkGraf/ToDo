@@ -8,10 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
@@ -28,12 +26,15 @@ public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LinearLayout todoView;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
         ToDoItem item = getItem(position);
 
-        String taskString = item.getTask();
-        Date createDate = item.getCreated();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-        String dateString = sdf.format(createDate);
+        String task = item.getTask();
+        String description = item.getDescription();
+        String created = sdf.format(item.getCreated());
+        String shallBeMade = sdf.format(item.getShallBeMade());
+        String category = item.getCategory().toString();
+        boolean isDone = item.getIsDone();
 
         if (convertView == null) {
             todoView = new LinearLayout(getContext());
@@ -45,11 +46,18 @@ public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
             todoView = (LinearLayout)convertView;
         }
 
-        TextView dateView = todoView.findViewById(R.id.rowDate);
-        TextView taskView = todoView.findViewById(R.id.row);
+        ToDoListItemView taskView = todoView.findViewById(R.id.task);
+        TextView descriptionView = todoView.findViewById(R.id.description);
+        TextView createdView = todoView.findViewById(R.id.created);
+        TextView shallBeMadeView = todoView.findViewById(R.id.shallBeMade);
+        TextView categoryView = todoView.findViewById(R.id.category);
 
-        dateView.setText(dateString);
-        taskView.setText(taskString);
+        taskView.setText(task);
+        taskView.setIsDone(isDone);
+        descriptionView.setText(description);
+        createdView.setText(created);
+        shallBeMadeView.setText(shallBeMade);
+        categoryView.setText(category);
 
         return todoView;
     }

@@ -4,25 +4,51 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/rowDate"
-        android:background="@color/notepad_paper"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <com.tsv.todo.ToDoListItemView
+        android:id="@+id/task"
         android:padding="10dp"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical"
-        android:textColor="#F000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/notepad_text" />
+
+    <TextView
+        android:id="@+id/created"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:textSize="10sp"
+        android:textColor="@color/notepad_text"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/shallBeMade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:textSize="10sp"
+        android:textColor="@color/notepad_text"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
 
-    <com.tsv.todo.ToDoListItemView
-        android:id="@+id/row"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical"
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40dp"
+        android:paddingBottom="1dp"
+        android:textSize="8sp"
         android:textColor="@color/notepad_text"
-        android:layout_toLeftOf="@+id/rowDate" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="8sp"
+        android:textColor="@color/notepad_text"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

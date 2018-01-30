@@ -10,9 +10,11 @@ import android.widget.TextView;
 public class ToDoListItemView extends TextView {
 
     private Paint marginPaint;
-    private Paint linePaint;
     private int paperColor;
+    private int paperIsDoneColor;
     private float margin;
+
+    private boolean isDone;
 
     public ToDoListItemView(Context context, AttributeSet attributeSet, int ds) {
         super(context, attributeSet, ds);
@@ -35,19 +37,17 @@ public class ToDoListItemView extends TextView {
         // Кисти.
         marginPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         marginPaint.setColor(resources.getColor(R.color.notepad_margin));
-        linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(resources.getColor(R.color.notepad_lines));
 
         paperColor = resources.getColor(R.color.notepad_paper);
+        paperIsDoneColor = resources.getColor(R.color.notepad_paper_is_done);
         margin = resources.getDimension(R.dimen.notepad_margin);
+
+        isDone = false;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawColor(paperColor);
-
-        //canvas.drawLine(0, 0, getMeasuredHeight(), 0, linePaint);
-        //canvas.drawLine(0, getMeasuredHeight(), getMeasuredWidth(), getMeasuredHeight(), linePaint);
+        canvas.drawColor(isDone ? paperIsDoneColor : paperColor);
 
         canvas.drawLine(margin, 0, margin, getMeasuredHeight(), marginPaint);
 
@@ -56,5 +56,9 @@ public class ToDoListItemView extends TextView {
 
         super.onDraw(canvas);
         canvas.restore();
+    }
+
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
     }
 }

@@ -21,7 +21,11 @@ public class ToDoContentProvider extends ContentProvider {
 
     public static final String KEY_ID = "_id";
     public static final String KEY_TASK = "task";
-    public static final String KEY_CREATION_DATE = "creation_date";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_CREATED_DATE = "created_date";
+    public static final String KEY_SHALL_BE_MADE_DATE = "shall_be_made_date";
+    public static final String KEY_CATEGORY = "category";
+    public static final String KEY_IS_DONE = "is_done";
 
     private MySQLiteOpenHelper myOpenHelper;
 
@@ -147,7 +151,11 @@ public class ToDoContentProvider extends ContentProvider {
         private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " ("
                 + KEY_ID + " integer primary key autoincrement, "
                 + KEY_TASK + " text not null, "
-                + KEY_CREATION_DATE + " long);";
+                + KEY_DESCRIPTION + " text not null, "
+                + KEY_CREATED_DATE + " long, "
+                + KEY_SHALL_BE_MADE_DATE + " long, "
+                + KEY_CATEGORY + " integer, "
+                + KEY_IS_DONE + " integer);";
 
         public MySQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
