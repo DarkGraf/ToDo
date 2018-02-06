@@ -8,6 +8,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         implements NewItemFragment.OnNewItemAddedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private final int MENU_IS_DONE = 0;
+    private final int MENU_EDIT = 1;
     private final int MENU_DELETE = 2;
 
     private ArrayList<ToDoItem> todoItems;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity
 
         menu.setHeaderTitle("Выбор действия");
         menu.add(Menu.NONE, MENU_IS_DONE, Menu.NONE, "Выполнить");
+        menu.add(Menu.NONE, MENU_EDIT, Menu.NONE, "Редактировать");
         menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, "Удалить");
     }
 
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity
         {
             case MENU_IS_DONE:
                 setToDoItemIsDone(item);
+                return true;
+            case MENU_EDIT:
+                editToDoItem(item);
                 return true;
             case MENU_DELETE:
                 deleteToDoItem(item);
@@ -124,6 +130,21 @@ public class MainActivity extends AppCompatActivity
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void editToDoItem(ToDoItem item) {
+        Intent intent = new Intent(this, ToDoItemActivity.class);
+        intent.putExtra(ToDoItemParcelable.TAG_PARCELABLE_NAME, new ToDoItemParcelable(item));
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                getLoaderManager().restartLoader(0, null, this);
+            }
+        }
     }
 
     // region NewItemFragment.OnNewItemAddedListener

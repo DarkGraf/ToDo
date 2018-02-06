@@ -16,10 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <provider
-            android:authorities="com.tsv.todoprovider"
-            android:name=".ToDoContentProvider" />
+            android:name=".ToDoContentProvider"
+            android:authorities="com.tsv.todoprovider" />
+
+        <activity android:name=".ToDoItemActivity"></activity>
     </application>
 
 </manifest>

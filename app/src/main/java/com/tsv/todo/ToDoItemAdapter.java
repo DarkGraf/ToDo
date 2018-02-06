@@ -8,10 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import java.text.SimpleDateFormat;
 import java.util.List;
 
+// TODO: Добавить паттерн ViewHolder.
 public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
 
     int resource;
@@ -26,13 +25,12 @@ public class ToDoItemAdapter extends ArrayAdapter<ToDoItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LinearLayout todoView;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
         ToDoItem item = getItem(position);
 
         String task = item.getTask();
         String description = item.getDescription();
-        String created = sdf.format(item.getCreated());
-        String shallBeMade = sdf.format(item.getShallBeMade());
+        String created = DateViewFormatter.format(item.getCreated());
+        String shallBeMade = DateViewFormatter.format(item.getShallBeMade());
         String category = item.getCategory().toString();
         boolean isDone = item.getIsDone();
 
