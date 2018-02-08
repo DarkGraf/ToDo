@@ -40,7 +40,10 @@
         android:textSize="8sp"
         android:textColor="@color/notepad_text"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="70dp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/category"
